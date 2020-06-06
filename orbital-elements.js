@@ -62,7 +62,7 @@ var sketch = function(p) {
         inclnation = inclInput.value();
 
         resetButton = p.createButton("Reset");
-        resetButton.position(distanceSliderX + paddingHorizontal + 10, distanceSliderY + paddingVertical-2*sliderHeight);
+        resetButton.position(inclSliderX + paddingHorizontal + 10, inclSliderY + paddingVertical-2*sliderHeight);
         resetButton.style("font-size", "16px");
         resetButton.mousePressed(reset);
 
