@@ -65,10 +65,6 @@ var sketch = function(p) {
         resetButton.position(inclSliderX + paddingHorizontal + 10, inclSliderY + paddingVertical-2*sliderHeight);
         resetButton.style("font-size", "16px");
         resetButton.mousePressed(reset);
-
-        p.ellipseMode(p.CENTER);
-        longRightwardsArrow = p.str(p.char(p.unhex("27F6")));
-        longLeftwardsArrow = p.str(p.char(p.unhex("27F5")));
     }
 
     p.draw = function() {
@@ -110,6 +106,6 @@ function inclSliderMoved() {
 
 function reset() {
     inclination = inclDefault;
-    inclSlider.value(inclincation);
-    inclInput.value(inclincation.toFixed(0));
+    inclSlider.value(inclination);
+    inclInput.value(inclination.toFixed(0));
 }
