@@ -71,6 +71,23 @@ var sketch = function(p) {
         longLeftwardsArrow = p.str(p.char(p.unhex("27F5")));
     }
 
+    p.draw = function() {
+        p.background(0);
+        p.textSize(16);
+
+        p.push();
+        p.fill(64);
+        p.rect(plotWidth+1, 0, plotWidth+controlsWidth, plotHeight);
+        p.pop();
+
+        p.push();
+        p.textAlign(p.LEFT, p.TOP);
+        p.fill('#FFFFFF');
+        p.text(inclLabel, inclSliderX+5, inclSliderY+sliderHeight);
+        p.text(p.str(p.char(p.unhex("00B0"))), inclSliderX + 5 + p.textWidth(inclLabel) + inputHSize, inclSliderY+sliderHeight);
+        p.pop();
+    }
+
 }
 
 var myp5 = new p5(sketch);
