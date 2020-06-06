@@ -76,23 +76,23 @@ var sketch = function(p) {
 var myp5 = new p5(sketch);
 
 function inclInputChanged() {
-  if (inclInput.value() < inclMin) {
-    inclInput.value(inclMin.toFixed(0));
-  }
-  if (inclInput.value() > inclMax) {
-    inclInput.value(inclMax.toFixed(0));
-  }
-  inclination = inclInput.value();
-  inclSlider.value(inclination);
+    if (inclInput.value() < inclMin) {
+        inclInput.value(inclMin.toFixed(0));
+    }
+    if (inclInput.value() > inclMax) {
+        inclInput.value(inclMax.toFixed(0));
+    }
+    inclination = inclInput.value();
+    inclSlider.value(inclination);
 }
 
 function inclSliderMoved() {
-  inclination = inclSlider.value();
-  inclInput.value(inclination.toFixed(0));
+    inclination = inclSlider.value();
+    inclInput.value(inclination.toFixed(0));
 }
 
 function reset() {
-  inclination = inclDefault;
-  inclSlider.value(inclincation);
-  inclInput.value(inclincation.toFixed(0));
+    inclination = inclDefault;
+    inclSlider.value(inclincation);
+    inclInput.value(inclincation.toFixed(0));
 }
