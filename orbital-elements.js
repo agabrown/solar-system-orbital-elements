@@ -37,7 +37,7 @@ var sketch = function(p) {
 
     p.setup = function() {
         var heading = p.createElement('h2', 'Orbital elements for solar system objects');
-        heading.position(paddingHorizontal+0.1*plotWidth, paddingVertical-50);
+        heading.position(paddingHorizontal+0.1*plotWidth, paddingVertical-55);
         heading.style("margin",0);
         var canvas = p.createCanvas(plotWidth + controlsWidth, plotHeight);
         canvas.position(paddingHorizontal, paddingVertical);
