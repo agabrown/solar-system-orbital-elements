@@ -15,12 +15,12 @@ var inclinationMin = -90;
 var inclinationMax = 90;
 var inclinationStep = 1;
 
-var ascendingNode;
+var ascendingNode = 0;
 var ascendingNodeMin = 0;
 var ascendingNodeMax = 360;
 var ascendingNodeStep = 1;
 
-var argPerihelion;
+var argPerihelion = 0;
 var argPerihelionMin = 0;
 var argPerihelionMax = 360;
 var argPerihelionStep = 1;
@@ -32,23 +32,24 @@ var gui;
 var sketch = function(p) {
 
     p.preload = function() {
-        explanationText = p.loadStrings("explanation.md");
+        explanationText = p.loadStrings("explanation.html");
     }
 
     p.setup = function() {
-        var heading = p.createElement('h2', 'Orbital elements for solar system objects');
-        heading.position(paddingHorizontal+0.1*plotWidth, paddingVertical-55);
-        heading.style("margin",0);
         var canvas = p.createCanvas(plotWidth, plotHeight);
         canvas.position(paddingHorizontal, paddingVertical);
         var explain = p.createDiv(p.join(explanationText, " "));
         explain.position(paddingHorizontal+20, paddingVertical+plotHeight+20);
         explain.size(plotWidth - 40);
 
-        gui = createGui('Elements');
+        gui = p.createGui(this, 'Orbital elements');
         gui.addGlobals('inclination', 'ascendingNode', 'argPerihelion');
+        gui.setPosition(paddingHorizontal+plotWidth+10, paddingVertical);
 
         p.textSize(16);
+
+        // only call draw when the gui is changed
+        p.noLoop();
     }
 
     p.draw = function() {
@@ -57,14 +58,7 @@ var sketch = function(p) {
 
         p.push();
         p.fill(64);
-        p.rect(plotWidth+1, 0, plotWidth+controlsWidth, plotHeight);
-        p.pop();
-
-        p.push();
-        p.textAlign(p.LEFT, p.TOP);
-        p.fill('#FFFFFF');
-        p.text(inclLabel, inclSliderX+5, inclSliderY+sliderHeight);
-        p.text(p.str(p.char(p.unhex("00B0"))), inclSliderX + 5 + p.textWidth(inclLabel) + inputHSize, inclSliderY+sliderHeight);
+        p.rect(plotWidth+1, 0, plotWidth, plotHeight);
         p.pop();
     }
 
