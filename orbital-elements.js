@@ -4,6 +4,7 @@
  *
  * Anthony Brown Jun 2020 - Jun 2020
  */
+
 var mptab10 = new Map();
 mptab10.set('blue', [ 31, 119, 180]);
 mptab10.set('orange', [255, 127,  14]);
@@ -73,8 +74,8 @@ var sketch = function(p) {
         p.perspective();
         canvas.position(paddingHorizontal, paddingVertical);
         var explain = p.createDiv(p.join(explanationText, " "));
-        explain.position(paddingHorizontal+20, paddingVertical+plotHeight+20);
-        explain.size(plotWidth - 40);
+        explain.position(paddingHorizontal+plotWidth+20, paddingVertical+plotHeight-300);
+        explain.size(0.7*plotWidth);
 
         gui = p.createGui(this, 'Orbital elements');
         gui.addGlobals('camRotY', 'camRotZ', 'inclination', 'ascendingNode', 'argPerihelion');
@@ -93,6 +94,13 @@ var sketch = function(p) {
         p.background(255);
         p.push();
         rightHanded3DtoWEBGL(p, p.radians(camRotY), p.radians(camRotZ));
+
+        // Reference plane (XY plane of BCRS, loosely speaking the Ecliptic plane)
+        p.noStroke();
+        p.fill(mptab10.get('blue')[0], mptab10.get('blue')[1], mptab10.get('blue')[2], 150);
+        drawEllipse(p, refPlaneRadius, 0, 100);
+
+        // XYZ axes of the BCRS
         p.strokeWeight(2);
         p.stroke(255,0,0);
         p.line(0,0,0,200,0,0);
@@ -100,9 +108,8 @@ var sketch = function(p) {
         p.line(0,0,0,0,200,0);
         p.stroke(0,0,255);
         p.line(0,0,0,0,0,200);
-        p.noStroke();
-        p.fill(mptab10.get('blue')[0], mptab10.get('blue')[1], mptab10.get('blue')[2], 150);
-        drawEllipse(p, refPlaneRadius, 0, 100);
+        
+        // Orbit ellipse with its normal
         p.noFill();
         p.stroke(mptab10.get('orange'));
         p.strokeWeight(3);
@@ -112,6 +119,7 @@ var sketch = function(p) {
         drawEllipse(p, semimajor, eccentricity, 100);
         p.stroke(0);
         p.line(0,0,0,0,0,150);
+
         p.pop();
     }
 
