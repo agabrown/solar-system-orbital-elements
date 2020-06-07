@@ -27,6 +27,8 @@ var argPerihelionStep = 1;
 
 var explanationText;
 
+var gui;
+
 var sketch = function(p) {
 
     p.preload = function() {
@@ -43,7 +45,7 @@ var sketch = function(p) {
         explain.position(paddingHorizontal+20, paddingVertical+plotHeight+20);
         explain.size(plotWidth - 40);
 
-        gui = createGui('slider-range-1');
+        gui = createGui('Elements');
         gui.addGlobals('inclination', 'ascendingNode', 'argPerihelion');
 
         p.textSize(16);
