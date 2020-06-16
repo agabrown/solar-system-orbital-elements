@@ -62,6 +62,7 @@ var gui;
 var semimajor = 2;
 var eccentricity = 0.6;
 var refPlaneRadius = semimajor*(1+eccentricity);
+const SCALE = 100;
 
 var sketch = function(p) {
 
@@ -83,7 +84,6 @@ var sketch = function(p) {
 
         p.textSize(16);
         p.ellipseMode(p.RADIUS);
-        p.blendMode(p.BLEND);
 
         // only call draw when the gui is changed
         p.noLoop();
@@ -94,9 +94,11 @@ var sketch = function(p) {
     p.draw = function() {
         p.background(255);
         p.push();
+
         rightHanded3DtoWEBGL(p, p.radians(camRotY), p.radians(camRotZ));
 
         p.push()
+
         // XYZ axes of the BCRS
         p.strokeWeight(3);
         p.stroke(255,0,0);
@@ -113,12 +115,21 @@ var sketch = function(p) {
         p.rotateZ(p.radians(ascendingNode));
         p.rotateX(p.radians(inclination));
         p.rotateZ(p.radians(argPerihelion));
-        drawEllipse(p, semimajor, eccentricity, 100);
+        drawEllipse(p, semimajor, eccentricity, SCALE);
         p.stroke(0);
         p.line(0,0,0,0,0,150);
+
+        p.stroke(mptab10.get('orange'));
+        p.line(0, 0, 0, semimajor*(1-eccentricity)*SCALE, 0, 0);
+        p.noStroke();
+        p.fill(mptab10.get('orange'));
+        p.circle(semimajor*(1-eccentricity)*SCALE, 0, 7);
+
         p.pop();
 
         // Reference plane (XY plane of BCRS, loosely speaking the Ecliptic plane)
+        // Draw this last so that the transparency works correctly (where the intention
+        // is to see the orbital ellipse through the plane).
         p.noStroke();
         p.fill(mptab10.get('blue')[0], mptab10.get('blue')[1], mptab10.get('blue')[2], 150);
         drawEllipse(p, refPlaneRadius, 0, 100);
