@@ -119,6 +119,7 @@ var sketch = function(p) {
         p.stroke(0);
         p.line(0,0,0,0,0,150);
 
+        // Perihelion
         p.stroke(mptab10.get('orange'));
         p.line(0, 0, 0, semimajor*(1-eccentricity)*SCALE, 0, 0);
         p.noStroke();
