@@ -83,6 +83,7 @@ var sketch = function(p) {
 
         p.textSize(16);
         p.ellipseMode(p.RADIUS);
+        p.blendMode(p.BLEND);
 
         // only call draw when the gui is changed
         p.noLoop();
@@ -95,20 +96,16 @@ var sketch = function(p) {
         p.push();
         rightHanded3DtoWEBGL(p, p.radians(camRotY), p.radians(camRotZ));
 
-        // Reference plane (XY plane of BCRS, loosely speaking the Ecliptic plane)
-        p.noStroke();
-        p.fill(mptab10.get('blue')[0], mptab10.get('blue')[1], mptab10.get('blue')[2], 150);
-        drawEllipse(p, refPlaneRadius, 0, 100);
-
+        p.push()
         // XYZ axes of the BCRS
-        p.strokeWeight(2);
+        p.strokeWeight(3);
         p.stroke(255,0,0);
         p.line(0,0,0,200,0,0);
         p.stroke(0,255,0);
         p.line(0,0,0,0,200,0);
         p.stroke(0,0,255);
         p.line(0,0,0,0,0,200);
-        
+
         // Orbit ellipse with its normal
         p.noFill();
         p.stroke(mptab10.get('orange'));
@@ -119,6 +116,12 @@ var sketch = function(p) {
         drawEllipse(p, semimajor, eccentricity, 100);
         p.stroke(0);
         p.line(0,0,0,0,0,150);
+        p.pop();
+
+        // Reference plane (XY plane of BCRS, loosely speaking the Ecliptic plane)
+        p.noStroke();
+        p.fill(mptab10.get('blue')[0], mptab10.get('blue')[1], mptab10.get('blue')[2], 150);
+        drawEllipse(p, refPlaneRadius, 0, 100);
 
         p.pop();
     }
@@ -129,7 +132,7 @@ var sketch = function(p) {
                 visible = !visible;
                 if (visible)
                     gui.show();
-                else 
+                else
                     gui.hide();
                 break;
         }
