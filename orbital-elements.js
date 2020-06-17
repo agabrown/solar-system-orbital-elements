@@ -59,6 +59,8 @@ var explanationText;
 var visible = true;
 var gui;
 
+var rasc, rdesc, xasc, xdesc, yasc, ydesc;
+
 var semimajor = 2;
 var eccentricity = 0.6;
 var refPlaneRadius = semimajor*(1+eccentricity);
@@ -84,6 +86,7 @@ var sketch = function(p) {
 
         p.textSize(16);
         p.ellipseMode(p.RADIUS);
+        p.angleMode(p.DEGREES);
 
         // only call draw when the gui is changed
         p.noLoop();
@@ -95,7 +98,7 @@ var sketch = function(p) {
         p.background(255);
         p.push();
 
-        rightHanded3DtoWEBGL(p, p.radians(camRotY), p.radians(camRotZ));
+        rightHanded3DtoWEBGL(p, camRotY, camRotZ);
 
         p.push()
 
@@ -112,9 +115,9 @@ var sketch = function(p) {
         p.noFill();
         p.stroke(mptab10.get('orange'));
         p.strokeWeight(3);
-        p.rotateZ(p.radians(ascendingNode));
-        p.rotateX(p.radians(inclination));
-        p.rotateZ(p.radians(argPerihelion));
+        p.rotateZ(ascendingNode);
+        p.rotateX(inclination);
+        p.rotateZ(argPerihelion);
         drawEllipse(p, semimajor, eccentricity, SCALE);
         p.stroke(0);
         p.line(0,0,0,0,0,150);
@@ -125,6 +128,19 @@ var sketch = function(p) {
         p.noStroke();
         p.fill(mptab10.get('orange'));
         p.circle(semimajor*(1-eccentricity)*SCALE, 0, 7);
+
+        // Draw line of nodes. The points on the ellipse at true anomaly -omega
+        // (ascending node) and pi-omega (descending node) form the endpoints.
+        if (inclination != 0.0) {
+            rasc = SCALE*semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(-argPerihelion));
+            rdesc = SCALE*semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(180-argPerihelion));
+            xasc = rasc*p.cos(-argPerihelion);
+            yasc = rasc*p.sin(-argPerihelion);
+            xdesc = rdesc*p.cos(180-argPerihelion);
+            ydesc = rdesc*p.sin(180-argPerihelion);
+            p.stroke(mptab10.get('blue'));
+            p.line(xasc, yasc, 0, xdesc, ydesc, 0);
+        }
 
         p.pop();
 
