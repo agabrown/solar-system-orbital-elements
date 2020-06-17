@@ -103,28 +103,45 @@ var sketch = function(p) {
         p.push()
 
         // XYZ axes of the BCRS
-        p.strokeWeight(3);
-        p.stroke(255,0,0);
-        p.line(0,0,0,200,0,0);
-        p.stroke(0,255,0);
-        p.line(0,0,0,0,200,0);
-        p.stroke(0,0,255);
-        p.line(0,0,0,0,0,200);
+        p.strokeWeight(1);
+        p.stroke(0);
+        p.line(0,0,0,refPlaneRadius*SCALE*1.05,0,0);
+        p.push()
+        p.translate(refPlaneRadius*SCALE*1.05,0,0);
+        p.rotateZ(-90);
+        p.cone(SCALE*0.05, SCALE*0.1);
+        p.pop();
+        p.line(0,0,0,0,refPlaneRadius*SCALE*1.05,0);
+        p.push()
+        p.translate(0,refPlaneRadius*SCALE*1.05,0);
+        p.cone(SCALE*0.05, SCALE*0.1);
+        p.pop();
+        p.line(0,0,0,0,0,refPlaneRadius*SCALE*0.7);
+        p.push()
+        p.translate(0,0,refPlaneRadius*SCALE*0.7);
+        p.rotateX(90);
+        p.cone(SCALE*0.05, SCALE*0.1);
+        p.pop();
 
         // Orbit ellipse with its normal
         p.noFill();
-        p.stroke(mptab10.get('orange'));
+        p.stroke(mptab10.get('blue'));
         p.strokeWeight(3);
         p.rotateZ(ascendingNode);
         p.rotateX(inclination);
         p.rotateZ(argPerihelion);
         drawEllipse(p, semimajor, eccentricity, SCALE);
-        p.stroke(0);
-        p.line(0,0,0,0,0,150);
+        p.stroke(mptab10.get('orange'));
+        p.line(0,0,0,0,0,refPlaneRadius*SCALE*0.5);
+        p.push()
+        p.translate(0,0,refPlaneRadius*SCALE*0.5);
+        p.rotateX(90);
+        p.cone(SCALE*0.05, SCALE*0.1);
+        p.pop();
 
         // Draw line segment and point indicatiing perihelion
         p.stroke(mptab10.get('orange'));
-        p.line(0, 0, 0, semimajor*(1-eccentricity)*SCALE, 0, 0);
+        p.line(-semimajor*(1+eccentricity)*SCALE, 0, 0, semimajor*(1-eccentricity)*SCALE, 0, 0);
         p.noStroke();
         p.fill(mptab10.get('orange'));
         p.circle(semimajor*(1-eccentricity)*SCALE, 0, 7);
@@ -138,7 +155,7 @@ var sketch = function(p) {
             yasc = rasc*p.sin(-argPerihelion);
             xdesc = rdesc*p.cos(180-argPerihelion);
             ydesc = rdesc*p.sin(180-argPerihelion);
-            p.stroke(mptab10.get('blue'));
+            p.stroke(mptab10.get('red'));
             p.line(xasc, yasc, 0, xdesc, ydesc, 0);
         }
 
@@ -148,8 +165,8 @@ var sketch = function(p) {
         // Draw this last so that the transparency works correctly (where the intention
         // is to see the orbital ellipse through the plane).
         p.noStroke();
-        p.fill(mptab10.get('blue')[0], mptab10.get('blue')[1], mptab10.get('blue')[2], 150);
-        drawEllipse(p, refPlaneRadius, 0, 100);
+        p.fill(mptab10.get('red')[0], mptab10.get('red')[1], mptab10.get('red')[2], 150);
+        drawEllipse(p, refPlaneRadius, 0, SCALE);
 
         p.pop();
     }
