@@ -56,10 +56,13 @@ var argPerihelionStep = 1;
 
 var explanationText;
 
-var visible = true;
+var showHelp = true;
+var guiVisible = true;
 var gui;
 
 var rasc, rdesc, xasc, xdesc, yasc, ydesc;
+var r, theta;
+var animateBody = false;
 
 var semimajor = 2;
 var eccentricity = 0.6;
@@ -77,8 +80,8 @@ var sketch = function(p) {
         p.perspective();
         canvas.position(paddingHorizontal, paddingVertical);
         var explain = p.createDiv(p.join(explanationText, " "));
-        explain.position(paddingHorizontal+plotWidth+20, paddingVertical+plotHeight-300);
-        explain.size(0.7*plotWidth);
+        explain.position(paddingHorizontal+0.05*plotWidth, paddingVertical+0.05*plotHeight);
+        explain.size(0.9*plotWidth);
 
         gui = p.createGui(this, 'Orbital elements');
         gui.addGlobals('camRotY', 'camRotZ', 'inclination', 'ascendingNode', 'argPerihelion');
@@ -89,7 +92,7 @@ var sketch = function(p) {
         p.angleMode(p.DEGREES);
 
         // only call draw when the gui is changed
-        p.noLoop();
+        //p.noLoop();
         p.noFill();
         p.smooth();
     }
@@ -146,6 +149,16 @@ var sketch = function(p) {
         p.fill(mptab10.get('orange'));
         p.circle(semimajor*(1-eccentricity)*SCALE, 0, 7);
 
+        if (animateBody) {
+            p.push();
+            p.stroke(0);
+            theta = p.millis()/4000*360;
+            r = semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(theta))*SCALE;
+            p.translate(r*p.cos(theta), r*p.sin(theta), 0);
+            p.sphere(SCALE*0.1);
+            p.pop();
+        }
+
         // Draw line of nodes. The points on the ellipse at true anomaly -omega
         // (ascending node) and pi-omega (descending node) form the endpoints.
         if (inclination != 0.0) {
@@ -174,11 +187,28 @@ var sketch = function(p) {
     p.keyPressed = function() {
         switch(p.key) {
             case 'p':
-                visible = !visible;
-                if (visible)
+                guiVisible = !guiVisible;
+                if (guiVisible)
                     gui.show();
                 else
                     gui.hide();
+                break;
+            case 'a':
+                animateBody = !animateBody;
+                if (animateBody)
+                    p.loop();
+                else
+                    p.noLoop();
+                break;
+            case 'h':
+                showHelp = !showHelp;
+                if (showHelp) {
+                    var explain = p.createDiv(p.join(explanationText, " "));
+                    explain.position(paddingHorizontal+0.05*plotWidth, paddingVertical+0.05*plotHeight);
+                    explain.size(0.9*plotWidth);
+                } else {
+                    p.removeElements();
+                }
                 break;
         }
     }
