@@ -17,7 +17,7 @@ mptab10.set('grey', [127, 127, 127]);
 mptab10.set('olive', [188, 189,  34]);
 mptab10.set('cyan', [ 23, 190, 207]);
 
-var plotWidth = 800;
+var plotWidth = 900;
 var plotHeight = 600;
 
 var paddingHorizontal = 50;
@@ -40,8 +40,8 @@ var camRotZMax = 180;
 var camRotZStep = 1;
 
 var inclination = 0;
-var inclinationMin = -90;
-var inclinationMax = 90;
+var inclinationMin = 0;
+var inclinationMax = 180;
 var inclinationStep = 1;
 
 var ascendingNode = 0;
