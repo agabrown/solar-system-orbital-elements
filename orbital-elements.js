@@ -59,7 +59,6 @@ var helpButton;
 
 var guiVisible = true;
 var gui;
-const GUIWIDTH = 250;
 
 var rasc, rdesc, xasc, xdesc, yasc, ydesc;
 var r, theta;
@@ -78,15 +77,15 @@ var sketch = function(p) {
     }
 
     p.setup = function() {
-        var canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+        var canvas = p.createCanvas(900, 600, p.WEBGL);
         p.perspective();
         canvas.position(0,0);
         gui = p.createGui(this, 'Orbital elements');
         gui.addGlobals('showHelp', 'animateBody', 'camRotY', 'camRotZ', 'inclination', 'ascendingNode', 'argPerihelion');
-        gui.setPosition(paddingHorizontal, paddingVertical);
+        gui.setPosition(p.width, paddingVertical);
 
         explain = p.createDiv(p.join(explanationText, " "));
-        explain.position(paddingHorizontal+GUIWIDTH, paddingVertical);
+        explain.position(paddingHorizontal, paddingVertical);
         explain.size(HELPSIZE);
 
         p.ellipseMode(p.RADIUS);
@@ -103,7 +102,7 @@ var sketch = function(p) {
 
         if (showHelp & !helpVisible) {
             explain = p.createDiv(p.join(explanationText, " "));
-            explain.position(paddingHorizontal+GUIWIDTH, paddingVertical);
+            explain.position(paddingHorizontal, paddingVertical);
             explain.size(HELPSIZE);
             helpVisible = true;
         } else {
