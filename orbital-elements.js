@@ -17,9 +17,6 @@ mptab10.set('grey', [127, 127, 127]);
 mptab10.set('olive', [188, 189,  34]);
 mptab10.set('cyan', [ 23, 190, 207]);
 
-var plotWidth = 900;
-var plotHeight = 600;
-
 var paddingHorizontal = 50;
 var paddingVertical = 50;
 
@@ -55,10 +52,14 @@ var argPerihelionMax = 360;
 var argPerihelionStep = 1;
 
 var explanationText;
-
+var explain;
 var showHelp = true;
+var helpVisible = true;
+var helpButton;
+
 var guiVisible = true;
 var gui;
+const GUIWIDTH = 250;
 
 var rasc, rdesc, xasc, xdesc, yasc, ydesc;
 var r, theta;
@@ -68,6 +69,7 @@ var semimajor = 2;
 var eccentricity = 0.6;
 var refPlaneRadius = semimajor*(1+eccentricity);
 const SCALE = 100;
+const HELPSIZE = 600;
 
 var sketch = function(p) {
 
@@ -76,18 +78,17 @@ var sketch = function(p) {
     }
 
     p.setup = function() {
-        var canvas = p.createCanvas(plotWidth, plotHeight, p.WEBGL);
+        var canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
         p.perspective();
-        canvas.position(paddingHorizontal, paddingVertical);
-        var explain = p.createDiv(p.join(explanationText, " "));
-        explain.position(paddingHorizontal+0.05*plotWidth, paddingVertical+0.05*plotHeight);
-        explain.size(0.9*plotWidth);
-
+        canvas.position(0,0);
         gui = p.createGui(this, 'Orbital elements');
-        gui.addGlobals('camRotY', 'camRotZ', 'inclination', 'ascendingNode', 'argPerihelion');
-        gui.setPosition(paddingHorizontal+plotWidth+10, paddingVertical);
+        gui.addGlobals('showHelp', 'animateBody', 'camRotY', 'camRotZ', 'inclination', 'ascendingNode', 'argPerihelion');
+        gui.setPosition(paddingHorizontal, paddingVertical);
 
-        p.textSize(16);
+        explain = p.createDiv(p.join(explanationText, " "));
+        explain.position(paddingHorizontal+GUIWIDTH, paddingVertical);
+        explain.size(HELPSIZE);
+
         p.ellipseMode(p.RADIUS);
         p.angleMode(p.DEGREES);
 
@@ -99,6 +100,19 @@ var sketch = function(p) {
 
     p.draw = function() {
         p.background(255);
+
+        if (showHelp & !helpVisible) {
+            explain = p.createDiv(p.join(explanationText, " "));
+            explain.position(paddingHorizontal+GUIWIDTH, paddingVertical);
+            explain.size(HELPSIZE);
+            helpVisible = true;
+        } else {
+            if (!showHelp) {
+                explain.remove();
+                helpVisible = false;
+            }
+        }
+
         p.push();
 
         rightHanded3DtoWEBGL(p, camRotY, camRotZ);
@@ -182,35 +196,6 @@ var sketch = function(p) {
         drawEllipse(p, refPlaneRadius, 0, SCALE);
 
         p.pop();
-    }
-
-    p.keyPressed = function() {
-        switch(p.key) {
-            case 'p':
-                guiVisible = !guiVisible;
-                if (guiVisible)
-                    gui.show();
-                else
-                    gui.hide();
-                break;
-            case 'a':
-                animateBody = !animateBody;
-                if (animateBody)
-                    p.loop();
-                else
-                    p.noLoop();
-                break;
-            case 'h':
-                showHelp = !showHelp;
-                if (showHelp) {
-                    var explain = p.createDiv(p.join(explanationText, " "));
-                    explain.position(paddingHorizontal+0.05*plotWidth, paddingVertical+0.05*plotHeight);
-                    explain.size(0.9*plotWidth);
-                } else {
-                    p.removeElements();
-                }
-                break;
-        }
     }
 
 }
