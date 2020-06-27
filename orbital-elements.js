@@ -91,8 +91,6 @@ var sketch = function(p) {
         p.ellipseMode(p.RADIUS);
         p.angleMode(p.DEGREES);
 
-        // only call draw when the gui is changed
-        //p.noLoop();
         p.noFill();
         p.smooth();
     }
