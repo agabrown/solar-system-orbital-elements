@@ -8,3 +8,4 @@ Javascript libraries used:
 * [p5.gui](https://github.com/bitcraftlab/p5.gui)
 * [quicksettings](https://github.com/bit101/quicksettings)
 * [dat.GUI](https://github.com/dataarts/dat.gui)
+* [scijs modified Newton-Raphson](https://github.com/scijs/modified-newton-raphson)

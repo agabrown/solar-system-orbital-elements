@@ -2,7 +2,7 @@
  * P5/Processing sketch that illustrates interactively the meaning of the orbital elements that
  * describe the orientation of elliptical orbits in the solar system.
  *
- * Anthony Brown Jun 2020 - Jun 2020
+ * Anthony Brown Jun 2020 - Dec 2020
  */
 
 var mptab10 = new Map();
@@ -61,14 +61,17 @@ var guiVisible = true;
 var gui;
 
 var rasc, rdesc, xasc, xdesc, yasc, ydesc;
-var r, theta;
+var r, theta, M, f, fp, fpp;
 var animateBody = false;
 
 var semimajor = 2;
 var eccentricity = 0.6;
+var semiminor;
 var refPlaneRadius = semimajor*(1+eccentricity);
 const SCALE = 100;
 const HELPSIZE = 600;
+
+var deg2rad;
 
 var sketch = function(p) {
 
@@ -89,10 +92,12 @@ var sketch = function(p) {
         explain.size(HELPSIZE);
 
         p.ellipseMode(p.RADIUS);
-        p.angleMode(p.DEGREES);
+        p.angleMode(p.RADIANS);
 
         p.noFill();
         p.smooth();
+        deg2rad = (x) => (x/180*p.PI);
+        semiminor = semimajor*p.sqrt(1-eccentricity**2);
     }
 
     p.draw = function() {
@@ -112,7 +117,7 @@ var sketch = function(p) {
 
         p.push();
 
-        rightHanded3DtoWEBGL(p, camRotY, camRotZ);
+        rightHanded3DtoWEBGL(p, deg2rad(camRotY), deg2rad(camRotZ));
 
         p.push()
 
@@ -133,7 +138,7 @@ var sketch = function(p) {
         p.line(0,0,0,0,0,refPlaneRadius*SCALE*0.7);
         p.push()
         p.translate(0,0,refPlaneRadius*SCALE*0.7);
-        p.rotateX(90);
+        p.rotateX(p.HALF_PI);
         p.cone(SCALE*0.05, SCALE*0.1);
         p.pop();
 
@@ -141,15 +146,15 @@ var sketch = function(p) {
         p.noFill();
         p.stroke(mptab10.get('blue'));
         p.strokeWeight(3);
-        p.rotateZ(ascendingNode);
-        p.rotateX(inclination);
-        p.rotateZ(argPerihelion);
+        p.rotateZ(deg2rad(ascendingNode));
+        p.rotateX(deg2rad(inclination));
+        p.rotateZ(deg2rad(argPerihelion));
         drawEllipse(p, semimajor, eccentricity, SCALE);
         p.stroke(mptab10.get('orange'));
         p.line(0,0,0,0,0,refPlaneRadius*SCALE*0.5);
         p.push()
         p.translate(0,0,refPlaneRadius*SCALE*0.5);
-        p.rotateX(90);
+        p.rotateX(p.HALF_PI);
         p.cone(SCALE*0.05, SCALE*0.1);
         p.pop();
 
@@ -163,9 +168,12 @@ var sketch = function(p) {
         if (animateBody) {
             p.push();
             p.stroke(0);
-            theta = p.millis()/4000*360;
-            r = semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(theta))*SCALE;
-            p.translate(r*p.cos(theta), r*p.sin(theta), 0);
+            M = (p.millis()/4000*p.TWO_PI)%p.TWO_PI;
+            f = (x) => (x - eccentricity*p.sin(x)-M);
+            fp = (x) => (1 - eccentricity*p.cos(x));
+            fpp = (x) => (eccentricity*p.sin(x));
+            E = modifiedNewtonRaphson(f, fp, fpp, M);
+            p.translate(SCALE*semimajor*(p.cos(E)-eccentricity), SCALE*semiminor*p.sin(E), 0);
             p.sphere(SCALE*0.1);
             p.pop();
         }
@@ -173,12 +181,12 @@ var sketch = function(p) {
         // Draw line of nodes. The points on the ellipse at true anomaly -omega
         // (ascending node) and pi-omega (descending node) form the endpoints.
         if (inclination != 0.0) {
-            rasc = SCALE*semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(-argPerihelion));
-            rdesc = SCALE*semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(180-argPerihelion));
-            xasc = rasc*p.cos(-argPerihelion);
-            yasc = rasc*p.sin(-argPerihelion);
-            xdesc = rdesc*p.cos(180-argPerihelion);
-            ydesc = rdesc*p.sin(180-argPerihelion);
+            rasc = SCALE*semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(-deg2rad(argPerihelion)));
+            rdesc = SCALE*semimajor*(1-eccentricity**2)/(1+eccentricity*p.cos(p.PI-deg2rad(argPerihelion)));
+            xasc = rasc*p.cos(-deg2rad(argPerihelion));
+            yasc = rasc*p.sin(-deg2rad(argPerihelion));
+            xdesc = rdesc*p.cos(p.PI-deg2rad(argPerihelion));
+            ydesc = rdesc*p.sin(p.PI-deg2rad(argPerihelion));
             p.stroke(mptab10.get('red'));
             p.line(xasc, yasc, 0, xdesc, ydesc, 0);
         }
