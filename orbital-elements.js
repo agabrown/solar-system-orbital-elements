@@ -127,7 +127,7 @@ var sketch = function(p) {
         p.line(0,0,0,refPlaneRadius*SCALE*1.05,0,0);
         p.push()
         p.translate(refPlaneRadius*SCALE*1.05,0,0);
-        p.rotateZ(-90);
+        p.rotateZ(-p.HALF_PI);
         p.cone(SCALE*0.05, SCALE*0.1);
         p.pop();
         p.line(0,0,0,0,refPlaneRadius*SCALE*1.05,0);
